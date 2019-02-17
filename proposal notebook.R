@@ -135,4 +135,21 @@ boxplot(Freq~state, data=citiesbytopstate[-c(179,313,527),], xlab='State', ylab=
 
 ggplot(citiesbytopstate, aes(x=state,y=Freq, fill=state))+geom_violin()+scale_y_continuous(trans = 'log2')+labs(title='City Brewery Number in Each State with High Breweries per Capita', x='State', y='Number of Breweries per City')+theme_classic()
 
+rm(citypopmerged)
+colnames(subest2017all)[colnames(subest2017all)=="NAME"] <- "city"
+citypopmerged<-merge(subest2017all,openbrewerydbALLfiltered,by='city')
+
+#manually curated citypopulations with brewery numbers over 20.  noticed some cities have redundant names in multiple states.  Omitted those for which the number of breweries in a city was affected by more than 25% by redundant city names.
+
+citypopbrewlm<-lm(NumBrew~Population2017, data=citypopmanual)
+plot(NumBrew~Population2017, data=citypopmanual, xlab='City Population', ylab='Number of Breweries in City', main='City Brewery Number by Population')
+abline(citypopbrewlm, col='Red')
+r2label<-paste0('R^2 = ',format(summary(citypopbrewlm)$adj.r.squared, digits=4))
+text(x=5e5,y=80.5,labels=r2label)
+
+
+
+
+
+
 
